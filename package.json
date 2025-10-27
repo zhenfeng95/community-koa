@@ -1,0 +1,68 @@
+{
+    "name": "koa",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "start": "nodemon src/index.js",
+        "webpack:debug": "node --inspect-brk ./node_modules/.bin/webpack --inline --progress",
+        "build": "cross-env NODE_ENV=production webpack --config ./config/webpack.config.prod.js",
+        "build:dev": "cross-env NODE_ENV=development webpack --config ./config/webpack.config.prod.js",
+        "clean": "rimraf dist",
+        "lint": "eslint src/ --ext .js --fix",
+        "dev": "cross-env NODE_ENV=development webpack --watch --config ./config/webpack.config.dev.js",
+        "watch": "cross-env NODE_ENV=development webpack --watch --progress --config ./config/webpack.config.dev.js --stats minimal",
+        "debug": "nodemon --inspect=9229 ./dist/server.bundle.js",
+        "dev:debug": "npm-run-all -p watch debug"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "nodemonConfig": {
+        "ignore": [
+            "dist/*",
+            "node_modules"
+        ]
+    },
+    "dependencies": {
+        "@koa/cors": "^5.0.0",
+        "bcrypt": "^6.0.0",
+        "bluebird": "^3.7.2",
+        "dayjs": "^1.11.18",
+        "dotenv": "^17.2.3",
+        "helmet": "^8.1.0",
+        "jsonwebtoken": "^9.0.2",
+        "koa": "^2.16.2",
+        "koa-body": "^6.0.1",
+        "koa-combine-routers": "^4.0.2",
+        "koa-compose": "^4.1.0",
+        "koa-compress": "^5.1.1",
+        "koa-helmet": "^8.0.1",
+        "koa-json": "^2.0.2",
+        "koa-jwt": "^4.0.4",
+        "koa-router": "^10.1.1",
+        "koa-static": "^5.0.0",
+        "md5": "^2.3.0",
+        "mongoose": "^8.19.1",
+        "nodemailer": "^7.0.9",
+        "redis": "^5.8.3",
+        "svg-captcha": "^1.4.0"
+    },
+    "devDependencies": {
+        "@babel/core": "^7.28.4",
+        "@babel/node": "^7.28.0",
+        "@babel/preset-env": "^7.28.3",
+        "babel-loader": "^10.0.0",
+        "clean-webpack-plugin": "^4.0.0",
+        "cross-env": "^10.1.0",
+        "nodemon-webpack-plugin": "^4.8.2",
+        "npm-run-all": "^4.1.5",
+        "rimraf": "^6.0.1",
+        "terser-webpack-plugin": "^5.3.14",
+        "webpack": "^5.102.1",
+        "webpack-cli": "^6.0.1",
+        "webpack-merge": "^6.0.1",
+        "webpack-node-externals": "^3.0.0"
+    }
+}
