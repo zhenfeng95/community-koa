@@ -3,7 +3,7 @@ const router = new Router();
 
 import publicController from '@/api/PublicController';
 
-router.prefix('/public');
+router.prefix('/v1/public');
 
 router.get('/getCaptcha', publicController.getCaptcha);
 

@@ -113,7 +113,7 @@ const isDevMode = process.env.NODE_ENV === 'production' ? false : true;
 
 // 定义公共路径，不需要jwt鉴权
 const jwt = koaJWT({ secret: md5(process.env.JWT_SECRET) }).unless({
-    path: [/^\/public/, /^\/login/]
+    path: [/^\/v1\/public/, /^\/v1\/login/]
 });
 
 /**

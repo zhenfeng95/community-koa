@@ -3,7 +3,7 @@ const router = new Router();
 
 import loginController from '@/api/LoginController';
 
-router.prefix('/login');
+router.prefix('/v1/login');
 
 router.post('/forget', loginController.forget);
 
