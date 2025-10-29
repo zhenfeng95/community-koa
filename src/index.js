@@ -32,6 +32,7 @@ import { setValue, getValue, delValue, getHValue } from './config/RedisConfig';
 // setValue('express', '5.0.0');
 // const val = await getValue('express');
 // console.log(val);
+
 async function testRedis() {
     // await setValue('imoocObj12', { name: 'node', age: 18 });
     // const val = await getHValue('imoocObj');
