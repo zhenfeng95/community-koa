@@ -28,6 +28,7 @@ dotenv.config();
 
 import User from './model/User';
 import { setValue, getValue, delValue, getHValue } from './config/RedisConfig';
+
 // setValue('express', '5.0.0');
 // const val = await getValue('express');
 // console.log(val);
