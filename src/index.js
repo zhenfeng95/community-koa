@@ -38,7 +38,6 @@ async function testRedis() {
     await delValue('name1');
 }
 // testRedis();
-
 // const mongoose = require('mongoose');
 
 // main()
