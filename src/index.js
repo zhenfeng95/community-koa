@@ -55,7 +55,6 @@ async function testRedis() {
 // });
 
 // const User = mongoose.model('users', UserSchema);
-
 async function test() {
     // let u = await User.findOne({ name: 'Node' });
     // 创建
