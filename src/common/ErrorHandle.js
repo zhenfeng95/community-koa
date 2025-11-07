@@ -2,7 +2,6 @@ export default async (ctx, next) => {
     return next().catch(err => {
         if (401 == err.status) {
             ctx.status = 401;
-            console.log('我到了这里了');
             ctx.body = {
                 code: 401,
                 message: 'Protected resource, use Authorization header to get access\n'

@@ -124,7 +124,7 @@ const middleware = compose([
     cors(),
     json({ pretty: false, param: 'pretty' }),
     helmet(),
-    statics(path.join(__dirname, '../public')),
+    statics(path.join(__dirname, '../public')), // 用来展示静态资源
     errorHandle,
     jwt
 ]);
