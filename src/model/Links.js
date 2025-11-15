@@ -1,8 +1,6 @@
 import mongoose from '@/config/DBHelpler';
 
-const Schema = mongoose.Schema;
-
-const LinksSchema = new Schema(
+const LinksSchema = new mongoose.Schema(
     {
         title: { type: String, default: '' },
         link: { type: String, default: '' },

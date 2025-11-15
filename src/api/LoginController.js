@@ -6,6 +6,7 @@ import { checkCode, generateToken, checkRedisAccountCode, getTempName } from '@/
 import jwt from 'jsonwebtoken';
 import md5 from 'md5';
 import User from '@/model/User';
+import SignRecord from '@/model/SignRecord';
 
 class LoginController {
     // 忘记密码，发送邮件
@@ -23,7 +24,7 @@ class LoginController {
             // const key = uuidv4();
             // setValue(
             //     key,
-            //     jsonwebtoken.sign({ _id: user._id }, config.JWT_SECRET, {
+            //     jsonwebtoken.sign({ _id: user._id }, md5(config.JWT_SECRET), {
             //         expiresIn: '30m'
             //     }),
             //     30 * 60
@@ -75,12 +76,30 @@ class LoginController {
                 checkUserPasswd = true;
             }
             if (checkUserPasswd) {
-                const token = jwt.sign({ username: 'admin' }, md5(process.env.JWT_SECRET), { expiresIn: 60 * 60 * 24 });
+                // 验证通过，返回Token数据
+                const userObj = user.toJSON();
+                const arr = ['password', 'username'];
+                arr.map(item => {
+                    return delete userObj[item];
+                });
+                // 加入isSign属性
+                const signRecord = await SignRecord.findByUid(userObj._id);
+                if (signRecord !== null) {
+                    if (moment(signRecord.created).format('YYYY-MM-DD') === moment().format('YYYY-MM-DD')) {
+                        userObj.isSign = true;
+                    } else {
+                        userObj.isSign = false;
+                    }
+                    userObj.lastSign = signRecord.created;
+                } else {
+                    // 用户无签到记录
+                    userObj.isSign = false;
+                }
+                const token = jwt.sign({ _id: userObj._id }, md5(process.env.JWT_SECRET), { expiresIn: 60 * 60 * 24 });
                 ctx.body = {
                     code: 0,
-                    data: {
-                        token
-                    },
+                    data: userObj,
+                    token,
                     msg: '登录成功'
                 };
             } else {

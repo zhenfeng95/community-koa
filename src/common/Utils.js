@@ -4,9 +4,10 @@ import jwt from 'jsonwebtoken';
 import fs from 'fs';
 import path from 'path';
 import moment from 'dayjs';
+import md5 from 'md5';
 
 const getJWTPayload = token => {
-    return jwt.verify(token.split(' ')[1], config.JWT_SECRET);
+    return jwt.verify(token.split(' ')[1], md5(config.JWT_SECRET));
 };
 
 // 生成 token 返回给客户端
@@ -16,7 +17,7 @@ const generateToken = (payload, expire = '1h') => {
             {
                 ...payload
             },
-            config.JWT_SECRET,
+            md5(config.JWT_SECRET),
             { expiresIn: expire }
         );
     } else {

@@ -1,6 +1,6 @@
-const nodemailer = require('nodemailer');
-const config = require('@/config');
-const qs = require('qs');
+import nodemailer from 'nodemailer';
+import config from '@/config';
+import qs from 'qs';
 
 const toSendSms = (option, sendInfo) => {
     option.subject = '你好，你的验证码';
@@ -10,6 +10,7 @@ const toSendSms = (option, sendInfo) => {
 
 // async..await is not allowed in global scope, must use a wrapper
 async function send(sendInfo, isSendSms) {
+    console.log('sendInfo', sendInfo);
     // Generate test SMTP service account from ethereal.email
     // Only needed if you don't have a real mail account for testing
     // let testAccount = await nodemailer.createTestAccount()
@@ -32,6 +33,7 @@ async function send(sendInfo, isSendSms) {
     //   user: 'Brian',
     // }
     const baseUrl = config.baseUrl;
+    console.log('config', config);
     const route = sendInfo.type === 'email' ? '/confirm' : '/reset';
     const url = `${baseUrl}/#${route}?` + qs.stringify(sendInfo.data);
 
@@ -78,4 +80,4 @@ async function send(sendInfo, isSendSms) {
 
 // main().catch(console.error)
 
-module.exports = send;
+export default send;

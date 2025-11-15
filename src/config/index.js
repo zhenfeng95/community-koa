@@ -18,13 +18,13 @@ const REDIS = {
 
 const JWT_SECRET = 'zzf';
 
-const baseUrl = process.env.NODE_ENV === 'production' ? 'http://front.dev.toimc.com:22500' : 'http://localhost:8080';
+const baseUrl = process.env.NODE_ENV === 'production' ? 'https://tech.zzf.net.cn' : 'http://localhost:8080';
 
 const uploadPath = process.env.NODE_ENV === 'production' ? '/app/public' : path.join(path.resolve(__dirname), '../../public');
 
 const adminEmail = ['admin-email@qq.com'];
 
-const publicPath = [/^\/public/, /^\/login/, /^\/content/, /^\/user/, /^\/comments/];
+const publicPath = [/^\/v1\/public/, /^\/v1\/login/, /^\/v1\/content/, /^\/v1\/user/, /^\/v1\/comments/];
 
 const isDevMode = process.env.NODE_ENV !== 'production';
 
