@@ -2,50 +2,53 @@ import send from '@/config/MailConfig';
 import bcrypt from 'bcrypt';
 import moment from 'dayjs';
 import config from '@/config';
-import { checkCode, generateToken, checkRedisAccountCode, getTempName } from '@/common/Utils';
+import { checkCode, getJWTPayload, generateToken, checkRedisAccountCode, getTempName } from '@/common/Utils';
 import jwt from 'jsonwebtoken';
 import md5 from 'md5';
 import User from '@/model/User';
 import SignRecord from '@/model/SignRecord';
+import { getValue, setValue } from '@/config/RedisConfig';
+import { v4 as uuidv4 } from 'uuid';
 
 class LoginController {
     // 忘记密码，发送邮件
     async forget(ctx) {
         const { body } = ctx.request;
-        // const user = await User.findOne({ username: body.username });
-        // if (!user) {
-        //     ctx.body = {
-        //         code: 404,
-        //         msg: '请检查账号！'
-        //     };
-        //     return;
-        // }
+        const user = await User.findOne({ username: body.username });
+        if (!user) {
+            ctx.body = {
+                code: 404,
+                msg: '请检查账号！',
+            };
+            return;
+        }
         try {
-            // const key = uuidv4();
-            // setValue(
-            //     key,
-            //     jsonwebtoken.sign({ _id: user._id }, md5(config.JWT_SECRET), {
-            //         expiresIn: '30m'
-            //     }),
-            //     30 * 60
-            // );
+            const key = uuidv4();
+            setValue(
+                key,
+                jwt.sign({ _id: user._id }, md5(config.JWT_SECRET), {
+                    expiresIn: '30m',
+                }),
+                30 * 60
+            );
             // body.username -> database -> email
             const result = await send({
-                // type: 'reset',
-                // data: {
-                //     key: key,
-                //     username: body.username
-                // },
-                code: 123456,
+                type: 'reset',
+                data: {
+                    key: key,
+                    username: body.username,
+                },
+                code: '',
                 expire: moment().add(30, 'minutes').format('YYYY-MM-DD HH:mm:ss'),
                 email: body.username,
-                user: '小皮球'
-                // user: user.name ? user.name : body.username
+                user: user.name ? user.name : body.username,
             });
+            console.log('-----------------');
+            console.log(result);
             ctx.body = {
                 code: 0,
                 data: result,
-                msg: '邮件发送成功'
+                msg: '邮件发送成功',
             };
         } catch (e) {
             console.log(e);
@@ -68,7 +71,7 @@ class LoginController {
             if (user === null) {
                 ctx.body = {
                     code: 500,
-                    msg: '用户名或者密码错误'
+                    msg: '用户名或者密码错误',
                 };
                 return;
             }
@@ -100,20 +103,20 @@ class LoginController {
                     code: 0,
                     data: userObj,
                     token,
-                    msg: '登录成功'
+                    msg: '登录成功',
                 };
             } else {
                 // 用户名 密码验证失败，返回提示
                 ctx.body = {
                     code: 500,
-                    msg: '用户名或者密码错误'
+                    msg: '用户名或者密码错误',
                 };
             }
         } else {
             // 图片验证码校验失败
             ctx.body = {
                 code: 401,
-                msg: '图片验证码不正确,请检查！'
+                msg: '图片验证码不正确,请检查！',
             };
         }
     }
@@ -149,13 +152,13 @@ class LoginController {
                     username: body.username,
                     name: body.name,
                     password: body.password,
-                    created: moment().format('YYYY-MM-DD HH:mm:ss')
+                    created: moment().format('YYYY-MM-DD HH:mm:ss'),
                 });
                 const result = await user.save();
                 ctx.body = {
                     code: 0,
                     data: result,
-                    msg: '注册成功'
+                    msg: '注册成功',
                 };
                 return;
             }
@@ -165,8 +168,54 @@ class LoginController {
         }
         ctx.body = {
             code: 500,
-            msg: msg
+            msg: msg,
         };
+    }
+
+    // 密码重置
+    async reset(ctx) {
+        const { body } = ctx.request;
+        const sid = body.sid;
+        const code = body.code;
+        let msg = {};
+        // 验证图片验证码的时效性、正确性
+        const result = await checkCode(sid, code);
+        if (!body.key) {
+            ctx.body = {
+                code: 500,
+                msg: '请求参数异常，请重新获取链接',
+            };
+            return;
+        }
+        if (!result) {
+            msg.code = ['验证码已经失效，请重新获取！'];
+            ctx.body = {
+                code: 500,
+                msg: msg,
+            };
+            return;
+        }
+
+        if (body.key) {
+            const token = await getValue(body.key);
+            const obj = getJWTPayload('Bearer ' + token);
+            const newpasswd = await bcrypt.hash(body.password, 5);
+            await User.updateOne(
+                { _id: obj._id },
+                {
+                    password: newpasswd,
+                }
+            );
+            ctx.body = {
+                code: 200,
+                msg: '更新用户密码成功！',
+            };
+        } else {
+            ctx.body = {
+                code: 500,
+                msg: '链接已经失效',
+            };
+        }
     }
 }
 

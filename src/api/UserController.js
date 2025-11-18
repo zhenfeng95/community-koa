@@ -35,7 +35,7 @@ class UserController {
                     favs: user.favs,
                     count: user.count,
                     lastSign: record.created,
-                    msg: '用户已经签到'
+                    msg: '用户已经签到',
                 };
                 return;
             } else {
@@ -66,12 +66,12 @@ class UserController {
                         {
                             // user.favs += fav
                             // user.count += 1
-                            $inc: { favs: fav, count: 1 }
+                            $inc: { favs: fav, count: 1 },
                         }
                     );
                     result = {
                         favs: user.favs + fav,
-                        count: user.count + 1
+                        count: user.count + 1,
                     };
                 } else {
                     // 用户中断了一次签到
@@ -81,18 +81,18 @@ class UserController {
                         { _id: obj._id },
                         {
                             $set: { count: 1 },
-                            $inc: { favs: fav }
+                            $inc: { favs: fav },
                         }
                     );
                     result = {
                         favs: user.favs + fav,
-                        count: 1
+                        count: 1,
                     };
                 }
                 // 更新签到记录
                 newRecord = new SignRecord({
                     uid: obj._id,
-                    favs: fav
+                    favs: fav,
                 });
                 await newRecord.save();
             }
@@ -101,29 +101,29 @@ class UserController {
             // 保存用户的签到数据，签到记数 + 积分数据
             await User.updateOne(
                 {
-                    _id: obj._id
+                    _id: obj._id,
                 },
                 {
                     $set: { count: 1 },
-                    $inc: { favs: 5 }
+                    $inc: { favs: 5 },
                 }
             );
             // 保存用户的签到记录
             newRecord = new SignRecord({
                 uid: obj._id,
-                favs: 5
+                favs: 5,
             });
             await newRecord.save();
             result = {
                 favs: user.favs + 5,
-                count: 1
+                count: 1,
             };
         }
         ctx.body = {
             code: 0,
             msg: '请求成功',
             ...result,
-            lastSign: newRecord.created
+            lastSign: newRecord.created,
         };
     }
 
@@ -142,7 +142,7 @@ class UserController {
             if (tmpUser && tmpUser.password) {
                 ctx.body = {
                     code: 501,
-                    msg: '邮箱已经注册'
+                    msg: '邮箱已经注册',
                 };
                 return;
             }
@@ -150,19 +150,19 @@ class UserController {
             setValue(
                 key,
                 jwt.sign({ _id: obj._id }, md5(config.JWT_SECRET), {
-                    expiresIn: '30m'
+                    expiresIn: '30m',
                 })
             );
             await send({
                 type: 'email',
                 data: {
                     key: key,
-                    username: body.username
+                    username: body.username,
                 },
                 code: '',
                 expire: moment().add(30, 'minutes').format('YYYY-MM-DD HH:mm:ss'),
                 email: user.username,
-                user: user.name
+                user: user.name,
             });
             msg = '更新基本资料成功，账号修改需要邮件确认，请查收邮件！';
         }
@@ -175,12 +175,12 @@ class UserController {
         if (result.modifiedCount > 0) {
             ctx.body = {
                 code: 0,
-                msg: msg === '' ? '更新成功' : msg
+                msg: msg === '' ? '更新成功' : msg,
             };
         } else {
             ctx.body = {
                 code: 500,
-                msg: '更新失败'
+                msg: '更新失败',
             };
         }
     }
@@ -194,12 +194,12 @@ class UserController {
             await User.updateOne(
                 { _id: obj._id },
                 {
-                    username: body.username
+                    username: body.username,
                 }
             );
             ctx.body = {
                 code: 0,
-                msg: '更新用户名成功'
+                msg: '更新用户名成功',
             };
         }
     }
@@ -213,13 +213,13 @@ class UserController {
             const newpasswd = await bcrypt.hash(body.newpwd, 5);
             await User.updateOne({ _id: obj._id }, { $set: { password: newpasswd } });
             ctx.body = {
-                code: 200,
-                msg: '更新密码成功'
+                code: 0,
+                msg: '更新密码成功',
             };
         } else {
             ctx.body = {
                 code: 500,
-                msg: '更新密码错误，请检查！'
+                msg: '更新密码错误，请检查！',
             };
         }
     }
@@ -233,20 +233,20 @@ class UserController {
             await UserCollect.deleteOne({ uid: obj._id, tid: params.tid });
             ctx.body = {
                 code: 200,
-                msg: '取消收藏成功'
+                msg: '取消收藏成功',
             };
         } else {
             const newCollect = new UserCollect({
                 uid: obj._id,
                 tid: params.tid,
-                title: params.title
+                title: params.title,
             });
             const result = await newCollect.save();
             if (result.uid) {
                 ctx.body = {
                     code: 200,
                     data: result,
-                    msg: '收藏成功'
+                    msg: '收藏成功',
                 };
             }
         }
@@ -263,12 +263,12 @@ class UserController {
                 code: 200,
                 data: result,
                 total,
-                msg: '查询列表成功'
+                msg: '查询列表成功',
             };
         } else {
             ctx.body = {
                 code: 500,
-                msg: '查询列表失败'
+                msg: '查询列表失败',
             };
         }
     }
@@ -286,7 +286,7 @@ class UserController {
             const date = moment().format('YYYY-MM-DD');
             const result = await SignRecord.findOne({
                 uid: uid,
-                created: { $gte: date + ' 00:00:00' }
+                created: { $gte: date + ' 00:00:00' },
             });
             if (result && result.uid) {
                 user.isSign = true;
@@ -297,7 +297,7 @@ class UserController {
         ctx.body = {
             code: 200,
             data: user,
-            msg: '查询成功！'
+            msg: '查询成功！',
         };
     }
 
@@ -316,7 +316,7 @@ class UserController {
         ctx.body = {
             code: 200,
             data: result,
-            total: num
+            total: num,
         };
     }
 
@@ -327,7 +327,7 @@ class UserController {
             const result = await Comments.updateOne({ _id: params.id }, { isRead: '1' });
             if (result.ok === 1) {
                 ctx.body = {
-                    code: 200
+                    code: 200,
                 };
             }
         } else {
@@ -335,7 +335,7 @@ class UserController {
             const result = await Comments.updateMany({ uid: obj._id }, { isRead: '1' });
             if (result.ok === 1) {
                 ctx.body = {
-                    code: 200
+                    code: 200,
                 };
             }
         }
@@ -354,7 +354,7 @@ class UserController {
 
         ctx.body = {
             code: 200,
-            data: result
+            data: result,
         };
     }
 
@@ -371,7 +371,7 @@ class UserController {
         ctx.body = {
             code: 200,
             data: result,
-            total: total
+            total: total,
         };
     }
 
@@ -384,7 +384,7 @@ class UserController {
         ctx.body = {
             code: 200,
             msg: '删除成功',
-            data: result
+            data: result,
         };
         // } else {
         //   ctx.body = {
@@ -403,7 +403,7 @@ class UserController {
         if (!user) {
             ctx.body = {
                 code: 500,
-                msg: '用户不存在或者id信息错误！'
+                msg: '用户不存在或者id信息错误！',
             };
             return;
         }
@@ -426,12 +426,12 @@ class UserController {
         if (result.ok === 1 && result.nModified === 1) {
             ctx.body = {
                 code: 200,
-                msg: '更新成功'
+                msg: '更新成功',
             };
         } else {
             ctx.body = {
                 code: 500,
-                msg: '服务异常，更新失败'
+                msg: '服务异常，更新失败',
             };
         }
     }
@@ -443,7 +443,7 @@ class UserController {
         const result = await User.updateMany({ _id: { $in: body.ids } }, { $set: { ...body.settings } });
         ctx.body = {
             code: 200,
-            data: result
+            data: result,
         };
     }
 
@@ -458,7 +458,7 @@ class UserController {
         ctx.body = {
             code: 200,
             data: result,
-            msg: '用户名已经存在，更新失败！'
+            msg: '用户名已经存在，更新失败！',
         };
     }
 
@@ -476,12 +476,12 @@ class UserController {
             ctx.body = {
                 code: 200,
                 data: userObj,
-                msg: '添加用户成功'
+                msg: '添加用户成功',
             };
         } else {
             ctx.body = {
                 code: 500,
-                msg: '服务接口异常'
+                msg: '服务接口异常',
             };
         }
     }
@@ -502,12 +502,12 @@ class UserController {
             ctx.body = {
                 code: 200,
                 msg: '',
-                data: result
+                data: result,
             };
         } catch (e) {
             ctx.body = {
                 msg: '获取最新签到列表失败',
-                code: 500
+                code: 500,
             };
         }
     }
@@ -520,7 +520,7 @@ class UserController {
         body.email && (option.username = body.email);
         const result = await User.queryCount(option);
         ctx.body = {
-            result
+            result,
         };
     }
 
@@ -540,13 +540,13 @@ class UserController {
             }
             ctx.body = {
                 code: 200,
-                msg: '资料修改成功！'
+                msg: '资料修改成功！',
             };
             return;
         }
         ctx.body = {
             code: 500,
-            msg: '验证码不正确！'
+            msg: '验证码不正确！',
         };
     }
 }

@@ -113,20 +113,29 @@ const isDevMode = process.env.NODE_ENV === 'production' ? false : true;
 
 // 定义公共路径，不需要jwt鉴权
 const jwt = koaJWT({ secret: md5(process.env.JWT_SECRET) }).unless({
-    path: [/^\/v1\/public/, /^\/v1\/login/]
+    path: [/^\/v1\/public/, /^\/v1\/login/],
 });
 
 /**
  * 使用koa-compose 集成中间件
  */
 const middleware = compose([
-    koaBody(),
+    koaBody({
+        multipart: true,
+        formidable: {
+            keepExtensions: true,
+            maxFieldsSize: 5 * 1024 * 1024,
+        },
+        onError: err => {
+            console.log('koabody TCL: err', err);
+        },
+    }),
     cors(),
     json({ pretty: false, param: 'pretty' }),
     helmet(),
     statics(path.join(__dirname, '../public')), // 用来展示静态资源
     errorHandle,
-    jwt
+    jwt,
 ]);
 
 if (!isDevMode) {

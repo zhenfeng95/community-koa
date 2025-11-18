@@ -14,7 +14,7 @@ router.get('/fav', userController.userSign);
 router.post('/basic', userController.updateUserInfo);
 
 // 修改密码
-// router.post('/changePassword', userController.changePasswd);
+router.post('/changePassword', userController.changePasswd);
 
 // 取消 设置收藏
 // router.get('/setCollect', userController.setCollect);
