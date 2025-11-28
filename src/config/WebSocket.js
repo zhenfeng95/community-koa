@@ -7,6 +7,7 @@ import configfile from './index';
 class WebSocketServerClient {
     constructor(config = {}) {
         const defaultConfig = {
+            host: '0.0.0.0', // 允许外部连接
             port: configfile.wsPort,
             timeInterval: 5 * 1000,
             isAuth: true,
