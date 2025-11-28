@@ -28,8 +28,8 @@ const publicPath = [/^\/v1\/public/, /^\/v1\/login/, /^\/v1\/content/, /^\/v1\/u
 
 const isDevMode = process.env.NODE_ENV !== 'production';
 
-const port = 3000;
-const wsPort = 11007;
+const port = 3002;
+const wsPort = 3003;
 
 const AppID = 'wxc47d78881f2e620c';
 const AppSecret = 'your-app-secret';
