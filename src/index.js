@@ -21,8 +21,12 @@ const compose = require('koa-compose');
 const compress = require('koa-compress');
 import config from './config/index';
 import errorHandle from './common/ErrorHandle';
+import WebSocketServerClient from './config/WebSocket';
 import md5 from 'md5';
 
+const ws = new WebSocketServerClient();
+ws.init();
+global.ws = ws;
 import dotenv from 'dotenv';
 dotenv.config();
 

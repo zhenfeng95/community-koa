@@ -4,6 +4,7 @@ const router = new Router();
 import publicController from '@/api/PublicController';
 import contentController from '@/api/ContentController';
 import userController from '@/api/UserController';
+import commentsController from '@/api/CommentsController';
 
 router.prefix('/v1/public');
 
@@ -26,10 +27,10 @@ router.get('/topWeek', contentController.getTopWeek);
 router.get('/resetEmail', userController.updateUsername);
 
 // 获取文章详情
-// router.get('/content/detail', contentController.getPostDetail)
+router.get('/content/detail', contentController.getPostDetail);
 
 // 获取评论列表
-// router.get('/comments', commentsController.getComments)
+router.get('/comments', commentsController.getComments);
 
 // 获取热门评论
 // router.get('/getCommentsCount', commentsController.getCommentsCount)
@@ -38,13 +39,13 @@ router.get('/resetEmail', userController.updateUsername);
 // router.get('/getNewComments', commentsController.getNewComments)
 
 // 获取用户基本信息
-// router.get('/info', userController.getBasicInfo)
+router.get('/info', userController.getBasicInfo);
 
 // 获取用户最近的发贴记录
-// router.get('/latestPost', contentController.getPostPublic)
+router.get('/latestPost', contentController.getPostPublic);
 
 // 获取用户最近的评论记录
-// router.get('/latestComment', commentsController.getCommentPublic)
+router.get('/latestComment', commentsController.getCommentPublic);
 
 // 获取用热门帖子
 // router.get('/hotPost', publicController.getHotPost)

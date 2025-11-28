@@ -1,7 +1,7 @@
 import SignRecord from '../model/SignRecord';
 import { getJWTPayload, checkRedisAccountCode } from '../common/Utils';
 import User from '../model/User';
-// import UserCollect from '../model/UserCollect';
+import UserCollect from '../model/UserCollect';
 import moment from 'dayjs';
 import send from '@/config/MailConfig';
 import { v4 as uuidv4 } from 'uuid';
@@ -9,7 +9,7 @@ import jwt from 'jsonwebtoken';
 import config from '@/config';
 import { setValue, getValue, delValue } from '@/config/RedisConfig';
 import bcrypt from 'bcrypt';
-// import Comments from '@/model/Comments';
+import Comments from '@/model/Comments';
 import qs from 'qs';
 import md5 from 'md5';
 // import CommentsHands from '@/model/CommentsHands';
@@ -232,7 +232,7 @@ class UserController {
             // 说明用户已经收藏了帖子
             await UserCollect.deleteOne({ uid: obj._id, tid: params.tid });
             ctx.body = {
-                code: 200,
+                code: 0,
                 msg: '取消收藏成功',
             };
         } else {
@@ -244,7 +244,7 @@ class UserController {
             const result = await newCollect.save();
             if (result.uid) {
                 ctx.body = {
-                    code: 200,
+                    code: 0,
                     data: result,
                     msg: '收藏成功',
                 };
@@ -260,7 +260,7 @@ class UserController {
         const total = await UserCollect.countByUid(obj._id);
         if (result.length > 0) {
             ctx.body = {
-                code: 200,
+                code: 0,
                 data: result,
                 total,
                 msg: '查询列表成功',
@@ -295,7 +295,7 @@ class UserController {
             }
         }
         ctx.body = {
-            code: 200,
+            code: 0,
             data: user,
             msg: '查询成功！',
         };
@@ -314,7 +314,7 @@ class UserController {
         const result = await Comments.getMsgList(obj._id, page, limit);
 
         ctx.body = {
-            code: 200,
+            code: 0,
             data: result,
             total: num,
         };
@@ -325,17 +325,17 @@ class UserController {
         const params = ctx.query;
         if (params.id) {
             const result = await Comments.updateOne({ _id: params.id }, { isRead: '1' });
-            if (result.ok === 1) {
+            if (result.modifiedCount === 1) {
                 ctx.body = {
-                    code: 200,
+                    code: 0,
                 };
             }
         } else {
             const obj = await getJWTPayload(ctx.header.authorization);
             const result = await Comments.updateMany({ uid: obj._id }, { isRead: '1' });
-            if (result.ok === 1) {
+            if (result.modifiedCount >= 1) {
                 ctx.body = {
-                    code: 200,
+                    code: 0,
                 };
             }
         }
@@ -353,7 +353,7 @@ class UserController {
         const result = await CommentsHands.getHandsByUid(obj._id, page, limit);
 
         ctx.body = {
-            code: 200,
+            code: 0,
             data: result,
         };
     }
@@ -369,7 +369,7 @@ class UserController {
         const result = await User.getList(option, sort, page, limit);
         const total = await User.countList(option);
         ctx.body = {
-            code: 200,
+            code: 0,
             data: result,
             total: total,
         };
@@ -382,7 +382,7 @@ class UserController {
         // if (user) {
         const result = await User.deleteMany({ _id: { $in: body.ids } });
         ctx.body = {
-            code: 200,
+            code: 0,
             msg: '删除成功',
             data: result,
         };
@@ -425,7 +425,7 @@ class UserController {
         const result = await User.updateOne({ _id: body._id }, body);
         if (result.ok === 1 && result.nModified === 1) {
             ctx.body = {
-                code: 200,
+                code: 0,
                 msg: '更新成功',
             };
         } else {
@@ -442,7 +442,7 @@ class UserController {
         const { body } = ctx.request;
         const result = await User.updateMany({ _id: { $in: body.ids } }, { $set: { ...body.settings } });
         ctx.body = {
-            code: 200,
+            code: 0,
             data: result,
         };
     }
@@ -456,7 +456,7 @@ class UserController {
             result = 0;
         }
         ctx.body = {
-            code: 200,
+            code: 0,
             data: result,
             msg: '用户名已经存在，更新失败！',
         };
@@ -474,7 +474,7 @@ class UserController {
         });
         if (result) {
             ctx.body = {
-                code: 200,
+                code: 0,
                 data: userObj,
                 msg: '添加用户成功',
             };
@@ -500,7 +500,7 @@ class UserController {
                 result = await SignRecord.findLastSign();
             }
             ctx.body = {
-                code: 200,
+                code: 0,
                 msg: '',
                 data: result,
             };
@@ -539,7 +539,7 @@ class UserController {
                 await User.updateEmail(obj._id, email);
             }
             ctx.body = {
-                code: 200,
+                code: 0,
                 msg: '资料修改成功！',
             };
             return;
