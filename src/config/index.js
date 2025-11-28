@@ -13,7 +13,7 @@ const DB_URL = `mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@${MONGO_HOSTNAME}:
 const REDIS = {
     host: process.env.REDIS_HOST || '47.95.36.160',
     port: process.env.REDIS_PORT || 6379,
-    password: process.env.REDIS_PASS || '925926'
+    password: process.env.REDIS_PASS || '925926',
 };
 
 const JWT_SECRET = 'zzf';
@@ -29,7 +29,7 @@ const publicPath = [/^\/v1\/public/, /^\/v1\/login/, /^\/v1\/content/, /^\/v1\/u
 const isDevMode = process.env.NODE_ENV !== 'production';
 
 const port = 3000;
-const wsPort = 3001;
+const wsPort = 11007;
 
 const AppID = 'wxc47d78881f2e620c';
 const AppSecret = 'your-app-secret';
@@ -39,7 +39,7 @@ const SubIds = [
     '3icSr0YIBLcMSYXchHBTWgCiAAom4lrkJqZAf2pVc-4',
     '6q9Rrn0uekifZbdMuhfzmvexEnZh0Qcv2gfHUBsi1kk',
     'xVA_zdzgM8zPtpDOO92rpK9kQumz4O84E7sTy9Ihfds',
-    'sG80CJj2GvArifGRCWOJhumIyY5mQnM94RWGQkdctGc'
+    'sG80CJj2GvArifGRCWOJhumIyY5mQnM94RWGQkdctGc',
 ];
 
 export default {
@@ -57,5 +57,5 @@ export default {
     wsPort,
     AppID,
     AppSecret,
-    SubIds
+    SubIds,
 };
