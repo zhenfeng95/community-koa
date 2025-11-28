@@ -12,7 +12,7 @@ RUN npm install --no-progress --registry=https://registry.npmmirror.com
 
 RUN npm run build
 
-EXPOSE 3002
+EXPOSE 3002 11007
 
 # 挂载目录，配置静态资源
 # VOLUME [ "/app/ public" ]
