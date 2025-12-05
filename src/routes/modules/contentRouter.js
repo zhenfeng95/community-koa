@@ -14,12 +14,12 @@ router.post('/add', contentController.addPost);
 // 更新帖子
 router.post('/update', contentController.updatePost);
 
-// router.post('/updateId', contentController.updatePostByTid)
+router.post('/updateId', contentController.updatePostByTid);
 
 // router.post('/updatePostSettings', contentController.updatePostBatch)
 
 // // 删除帖子
-// router.post('/delete', contentController.deletePost);
+router.post('/delete', contentController.deletePost);
 
 // 微信发贴
 // router.post('/wxAdd', contentController.addWxPost);

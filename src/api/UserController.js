@@ -276,8 +276,8 @@ class UserController {
     // 获取用户基本信息
     async getBasicInfo(ctx) {
         const params = ctx.query;
-        // const obj = await getJWTPayload(ctx.header.authorization)
-        const uid = params.uid || ctx._id;
+        const obj = await getJWTPayload(ctx.header.authorization);
+        const uid = params.uid || obj._id;
         let user = await User.findByID(uid);
         // 取得用户的签到记录 有没有 > today 0:00:00
         if (user) {
@@ -407,15 +407,16 @@ class UserController {
             };
             return;
         }
+
         // if (body.username !== user.username) {
-        //   const userCheckName = await User.findOne({ username: body.username })
-        //   if (userCheckName) {
-        //     ctx.body = {
-        //       code: 501,
-        //       msg: '用户名已经存在，更新失败！'
+        //     const userCheckName = await User.findOne({ username: body.username });
+        //     if (userCheckName) {
+        //         ctx.body = {
+        //             code: 501,
+        //             msg: '用户名已经存在，更新失败！',
+        //         };
+        //         return;
         //     }
-        //     return
-        //   }
         // }
 
         // 2.判断密码是否传递 -> 进行加密保存
@@ -423,7 +424,7 @@ class UserController {
             body.password = await bcrypt.hash(body.password, 5);
         }
         const result = await User.updateOne({ _id: body._id }, body);
-        if (result.ok === 1 && result.nModified === 1) {
+        if (result.modifiedCount === 1) {
             ctx.body = {
                 code: 0,
                 msg: '更新成功',

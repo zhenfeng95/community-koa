@@ -1,5 +1,6 @@
 import Links from '@/model/Links';
 import User from '@/model/User';
+import PostTags from '@/model/PostTags';
 import Post from '@/model/Post';
 import UserCollect from '@/model/UserCollect';
 import fs from 'fs';
@@ -41,13 +42,13 @@ class ContentController {
             options.tags = { $elemMatch: { name: body.tag } };
         }
         const result = await Post.getList(options, sort, page, limit);
-        // const total = await Post.countList(options);
+        const total = await Post.countList(options);
 
         ctx.body = {
             code: 0,
             data: result,
             msg: '获取文章列表成功',
-            // total: total
+            total: total,
         };
     }
 
@@ -246,6 +247,24 @@ class ContentController {
         }
     }
 
+    async updatePostByTid(ctx) {
+        const { body } = ctx.request;
+        const result = await Post.updateOne({ _id: body._id }, body);
+        if (result.modifiedCount === 1) {
+            ctx.body = {
+                code: 0,
+                data: result,
+                msg: '更新帖子成功',
+            };
+        } else {
+            ctx.body = {
+                code: 500,
+                data: result,
+                msg: '编辑帖子，更新失败',
+            };
+        }
+    }
+
     // 获取文章详情
     async getPostDetail(ctx) {
         const params = ctx.query;
@@ -370,9 +389,9 @@ class ContentController {
         const { body } = ctx.request;
         // 删除帖子的同时要删除关联表中的数据
         const result = await Post.deleteManyAndRef({ _id: { $in: body.ids } });
-        if (result.ok === 1) {
+        if (result.deletedCount === 1) {
             ctx.body = {
-                code: 200,
+                code: 0,
                 msg: '删除成功',
             };
         } else {
@@ -389,7 +408,7 @@ class ContentController {
         const tag = new PostTags(body);
         await tag.save();
         ctx.body = {
-            code: 200,
+            code: 0,
             msg: '标签保存成功',
         };
     }
@@ -402,7 +421,7 @@ class ContentController {
         const result = await PostTags.getList({}, page, limit);
         const total = await PostTags.countList({});
         ctx.body = {
-            code: 200,
+            code: 0,
             data: result,
             total,
             msg: '查询tags成功！',
@@ -415,7 +434,7 @@ class ContentController {
         const result = await PostTags.deleteOne({ id: params.ptid });
 
         ctx.body = {
-            code: 200,
+            code: 0,
             data: result,
             msg: '删除成功',
         };
@@ -427,7 +446,7 @@ class ContentController {
         const result = await PostTags.updateOne({ _id: body._id }, body);
 
         ctx.body = {
-            code: 200,
+            code: 0,
             data: result,
             msg: '更新成功',
         };
