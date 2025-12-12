@@ -22,6 +22,10 @@ const compress = require('koa-compress');
 import config from './config/index';
 import errorHandle from './common/ErrorHandle';
 import WebSocketServerClient from './config/WebSocket';
+import auth from '@/common/Auth';
+import { run } from './common/Init';
+import log4js from '@/config/Log4j';
+import monitorLogger from '@/common/Logger';
 import md5 from 'md5';
 
 const ws = new WebSocketServerClient();
@@ -124,6 +128,7 @@ const jwt = koaJWT({ secret: md5(process.env.JWT_SECRET) }).unless({
  * 使用koa-compose 集成中间件
  */
 const middleware = compose([
+    monitorLogger,
     koaBody({
         multipart: true,
         formidable: {
@@ -140,6 +145,14 @@ const middleware = compose([
     statics(path.join(__dirname, '../public')), // 用来展示静态资源
     errorHandle,
     jwt,
+    auth,
+    config.isDevMode
+        ? log4js.koaLogger(log4js.getLogger('http'), {
+              level: 'auto',
+          })
+        : log4js.koaLogger(log4js.getLogger('access'), {
+              level: 'auto',
+          }),
 ]);
 
 if (!isDevMode) {
@@ -152,4 +165,8 @@ app.use(middleware);
 
 app.use(router());
 
-app.listen(3002);
+app.listen(3002, () => {
+    const logger = log4js.getLogger('out');
+    logger.info('app is runing at ' + config.port);
+    run();
+});

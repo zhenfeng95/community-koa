@@ -25,7 +25,7 @@ class ErrorController {
         const total = await ErrorRecord.find(query).countDocuments();
 
         ctx.body = {
-            code: 200,
+            code: 0,
             msg: '查询成功',
             data: result,
             total: total,
@@ -50,7 +50,7 @@ class ErrorController {
         const { body } = ctx.request;
         const result = await ErrorRecord.deleteMany({ _id: { $in: body.ids } });
         ctx.body = {
-            code: 200,
+            code: 0,
             msg: '删除成功',
             data: result,
         };
@@ -61,7 +61,7 @@ class ErrorController {
         const error = new ErrorRecord(body);
         const result = await error.save();
         ctx.body = {
-            code: 200,
+            code: 0,
             msg: '保存成功',
             data: result,
         };

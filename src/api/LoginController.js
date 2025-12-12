@@ -43,8 +43,7 @@ class LoginController {
                 email: body.username,
                 user: user.name ? user.name : body.username,
             });
-            console.log('-----------------');
-            console.log(result);
+
             ctx.body = {
                 code: 0,
                 data: result,

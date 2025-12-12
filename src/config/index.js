@@ -22,7 +22,7 @@ const baseUrl = process.env.NODE_ENV === 'production' ? 'https://tech.zzf.net.cn
 
 const uploadPath = process.env.NODE_ENV === 'production' ? '/app/public' : path.join(path.resolve(__dirname), '../../public');
 
-const adminEmail = ['admin-email@qq.com'];
+const adminEmail = ['285273676@qq.com'];
 
 const publicPath = [/^\/v1\/public/, /^\/v1\/login/, /^\/v1\/content/, /^\/v1\/user/, /^\/v1\/comments/];
 

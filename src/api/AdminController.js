@@ -16,7 +16,7 @@ class AdminController {
     async getMenu(ctx) {
         const result = await Menu.find({});
         ctx.body = {
-            code: 200,
+            code: 0,
             data: sortMenus(result),
         };
     }
@@ -26,7 +26,7 @@ class AdminController {
         const menu = new Menu(body);
         const result = await menu.save();
         ctx.body = {
-            code: 200,
+            code: 0,
             data: result,
         };
     }
@@ -37,7 +37,7 @@ class AdminController {
         delete data._id;
         const result = await Menu.updateOne({ _id: body._id }, { ...data });
         ctx.body = {
-            code: 200,
+            code: 0,
             data: result,
         };
     }
@@ -46,7 +46,7 @@ class AdminController {
         const { body } = ctx.request;
         const result = await Menu.deleteOne({ _id: body._id });
         ctx.body = {
-            code: 200,
+            code: 0,
             data: result,
         };
     }
@@ -54,7 +54,7 @@ class AdminController {
     async getRoles(ctx) {
         const result = await Roles.find({});
         ctx.body = {
-            code: 200,
+            code: 0,
             data: result,
         };
     }
@@ -64,7 +64,7 @@ class AdminController {
         const role = new Roles(body);
         const result = await role.save();
         ctx.body = {
-            code: 200,
+            code: 0,
             data: result,
         };
     }
@@ -75,7 +75,7 @@ class AdminController {
         delete data._id;
         const result = await Roles.updateOne({ _id: body._id }, { ...data });
         ctx.body = {
-            code: 200,
+            code: 0,
             data: result,
         };
     }
@@ -84,7 +84,7 @@ class AdminController {
         const { body } = ctx.request;
         const result = await Roles.deleteOne({ _id: body._id });
         ctx.body = {
-            code: 200,
+            code: 0,
             data: result,
         };
     }
@@ -118,7 +118,7 @@ class AdminController {
         // 结构进行改造
         const routes = getMenuData(treeData, menus, ctx.isAdmin);
         ctx.body = {
-            code: 200,
+            code: 0,
             data: routes,
         };
     }
@@ -237,7 +237,7 @@ class AdminController {
             weekData,
         };
         ctx.body = {
-            code: 200,
+            code: 0,
             data: result,
         };
     }
@@ -262,7 +262,7 @@ class AdminController {
             }
         }
         ctx.body = {
-            code: 200,
+            code: 0,
             data: result,
             total,
         };
@@ -272,7 +272,7 @@ class AdminController {
         const { body } = ctx.request;
         const result = await Comments.updateMany({ _id: { $in: body.ids } }, { $set: { ...body.settings } });
         ctx.body = {
-            code: 200,
+            code: 0,
             data: result,
         };
     }
@@ -281,7 +281,7 @@ class AdminController {
         const { body } = ctx.request;
         const result = await Comments.deleteMany({ _id: { $in: body.ids } });
         ctx.body = {
-            code: 200,
+            code: 0,
             msg: '删除成功',
             data: result,
         };
