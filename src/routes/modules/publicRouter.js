@@ -48,13 +48,13 @@ router.get('/latestPost', contentController.getPostPublic);
 router.get('/latestComment', commentsController.getCommentPublic);
 
 // 获取用热门帖子
-// router.get('/hotPost', publicController.getHotPost)
+router.get('/hotPost', publicController.getHotPost);
 
 // 获取用热门评论
-// router.get('/hotComments', publicController.getHotComments)
+router.get('/hotComments', publicController.getHotComments);
 
 // 获取用签到排行
-// router.get('/hotSignRecord', publicController.getHotSignRecord)
+router.get('/hotSignRecord', publicController.getHotSignRecord);
 
 // wx获取模板消息id
 // router.get('/getSubIds', publicController.getSubIds)
